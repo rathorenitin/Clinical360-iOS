@@ -46,6 +46,10 @@ extension ApiRequestProtocol {
     var keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy {
         JSONDecoder.KeyDecodingStrategy.useDefaultKeys
     }
+    
+    var dateDecodingStrategy: JSONDecoder.DateDecodingStrategy {
+        JSONDecoder.DateDecodingStrategy.iso8601
+    }
 }
 
 

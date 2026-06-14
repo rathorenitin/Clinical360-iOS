@@ -56,7 +56,7 @@ final class ApiClient : ApiClientProtocol {
             
             do {
                 let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .iso8601
+                decoder.dateDecodingStrategy = request.dateDecodingStrategy
                 
                 return try decoder.decode(T.self, from: data)
                 
@@ -75,8 +75,8 @@ final class ApiClient : ApiClientProtocol {
     func execute<T:Decodable>(request: ApiRequestProtocol,
                               completion: @escaping (Result<T?, APIError>?) -> Void) {
         switch request.getURLRequest() {
-        case .success(let request):
-            URLSession.shared.dataTask(with: request) { data, response, error in
+        case .success(let urlRequest):
+            URLSession.shared.dataTask(with: urlRequest) { data, response, error in
                 
                 guard error == nil else {
                     completion(.failure(.serverError))
@@ -101,7 +101,7 @@ final class ApiClient : ApiClientProtocol {
                 
                 do {
                     let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .iso8601
+                    decoder.dateDecodingStrategy = request.dateDecodingStrategy
                     
                     let decoded = try decoder.decode(T.self, from: data)
                     completion(.success(decoded))
