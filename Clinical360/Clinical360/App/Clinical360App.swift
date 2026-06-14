@@ -11,7 +11,7 @@ import SwiftUI
 struct Clinical360App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PatientListView()
         }
     }
 }
