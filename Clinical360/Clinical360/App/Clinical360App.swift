@@ -11,7 +11,9 @@ import SwiftUI
 struct Clinical360App: App {
     var body: some Scene {
         WindowGroup {
-            PatientListView()
+            let apiClient = ApiClient()
+            let PatientListRepository = PatientListRepository(apiClient: apiClient)
+            PatientListView(viewModel: PatientListViewModel(repository: PatientListRepository))
         }
     }
 }

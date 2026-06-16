@@ -9,6 +9,15 @@ import SwiftUI
 
 struct PatientListView: View {
     
+    @StateObject var viewModel: PatientListViewModel
+    
+    
     var body: some View {
+        VStack {
+            Text("Patient List")
+        }
+        .task {
+            await viewModel.getPatients()
+        }
     }
 }
