@@ -13,11 +13,35 @@ struct PatientListView: View {
     
     
     var body: some View {
-        VStack {
-            Text("Patient List")
+        NavigationStack {
+            VStack {
+                switch viewModel.state {
+                case .loading:
+                    LoadingView()
+                        .task {
+                            await viewModel.getPatients()
+                        }
+                    
+                case let .loaded(patientList):
+                    List(patientList) { patient in
+                        PatientListCell(patient: patient)
+                    }
+                    .listStyle(.insetGrouped)
+                    .navigationBarTitleDisplayMode(.large)
+                    
+                case let .empty(message):
+                    EmptyStateView(message: message)
+                    
+                case let .error(message):
+                    ErrorView(message: message) {
+                        viewModel.state = .loading
+                    }
+                    
+                }
+            }
+            .frame(alignment: .topLeading)
+            .navigationTitle("Patients")
         }
-        .task {
-            await viewModel.getPatients()
-        }
+        
     }
 }

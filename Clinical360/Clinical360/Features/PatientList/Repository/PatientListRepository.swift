@@ -9,7 +9,7 @@ import Foundation
 
 protocol PatientListRepositoryProtocol {
     
-    func getPatients() async throws -> PagedPatientsResponse?
+    func getPatients() async throws -> PagedPatientsResponse
     
 }
 
@@ -30,7 +30,7 @@ final class PatientListRepository: PatientListRepositoryProtocol {
     
     
     // MARK: - Get Patients
-    func getPatients() async throws -> PagedPatientsResponse? {
+    func getPatients() async throws -> PagedPatientsResponse {
         let patientUrlRequest = PatientListRequest(parameters: ["Take": "10",
                                                       "Skip": "0"])
         return try await self.apiClient.executeAsync(request: patientUrlRequest)

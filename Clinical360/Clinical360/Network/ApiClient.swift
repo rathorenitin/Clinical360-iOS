@@ -12,7 +12,7 @@ protocol ApiClientProtocol {
         request: ApiRequestProtocol,
         completion: @escaping (Result<T?, APIError>?) -> Void
     )
-    func executeAsync<T: Decodable>(request: ApiRequestProtocol) async throws -> T?
+    func executeAsync<T: Decodable>(request: ApiRequestProtocol) async throws -> T
     func fileDownloadAsync(request: ApiRequestProtocol) async throws -> URL
 }
 
@@ -41,7 +41,7 @@ final class ApiClient : ApiClientProtocol {
         }
     }
     
-    func executeAsync<T>(request: ApiRequestProtocol) async throws -> T? where T : Decodable {
+    func executeAsync<T>(request: ApiRequestProtocol) async throws -> T where T : Decodable {
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request.getRequest())
