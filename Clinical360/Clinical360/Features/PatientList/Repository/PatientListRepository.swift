@@ -13,10 +13,6 @@ protocol PatientListRepositoryProtocol {
     
 }
 
-enum PatientRepositoryError : Error {
-    case defaultError
-}
-
 // MARK: - PatientRepository
 
 final class PatientListRepository: PatientListRepositoryProtocol {

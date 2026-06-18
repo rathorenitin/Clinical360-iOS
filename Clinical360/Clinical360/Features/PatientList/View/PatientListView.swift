@@ -23,8 +23,16 @@ struct PatientListView: View {
                         }
                     
                 case let .loaded(patientList):
+                    let apiClient = ApiClient()
+                    let repository = PatientDetailRepository(apiClient: apiClient)
+                    
                     List(patientList) { patient in
-                        PatientListCell(patient: patient)
+                        NavigationLink(
+                            destination: PatientDetailView(viewModel: PatientDetailViewModel(patient: patient,
+                                                                                             repository: repository))
+                        ) {
+                            PatientListCell(patient: patient)
+                        }
                     }
                     .listStyle(.insetGrouped)
                     .navigationBarTitleDisplayMode(.large)

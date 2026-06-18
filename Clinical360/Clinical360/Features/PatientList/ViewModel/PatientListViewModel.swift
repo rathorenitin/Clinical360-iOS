@@ -8,13 +8,6 @@
 import Foundation
 import Combine
 
-enum ViewState<Result> {
-    case loading
-    case loaded(Result)
-    case empty(String)
-    case error(String)
-}
-
 protocol PatientListViewModelProtocol {
     func getPatients() async
 }
