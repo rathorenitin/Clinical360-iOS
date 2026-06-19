@@ -21,10 +21,8 @@ struct PatientDetailView: View {
                     }
                 
             case let .loaded(patientDetail):
-                //todo patient details
-                
-                Text(patientDetail.fullName)
-                    .fontWeight(.semibold)
+
+                PatientDetailsView(patient: patientDetail)
                 
             case let .empty(message):
                 EmptyStateView(message: message)
