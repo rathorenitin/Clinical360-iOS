@@ -24,6 +24,8 @@ struct PatientDetailView: View {
 
                 PatientDetailsView(patient: patientDetail)
                 
+                reportView()
+                
             case let .empty(message):
                 EmptyStateView(message: message)
                 
@@ -36,5 +38,27 @@ struct PatientDetailView: View {
         }
         .frame(alignment: .topLeading)
         .navigationTitle(viewModel.patient.fullName)
+    }
+    
+    private func reportView() -> some View {
+        VStack {
+            VStack(spacing: 12) {
+                Button(action: {
+                    Task {
+
+                    }
+                }) {
+                    Text("Download Report")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(12)
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                }
+            }
+            .padding()
+            .background(Color(.systemBackground))
+        }
     }
 }
