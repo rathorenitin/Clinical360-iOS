@@ -17,6 +17,7 @@ enum AppConstants {
 enum ApiEndPoint {
     case patientsList
     case patientsDetails
+    case downloadReport
 }
 
 extension ApiEndPoint: ApiComponent {
@@ -30,6 +31,8 @@ extension ApiEndPoint: ApiComponent {
             return "Patients"
         case .patientsDetails:
             return "Patients/PatientDetails"
+        case .downloadReport:
+            return "Report/Download"
         }
     }
     

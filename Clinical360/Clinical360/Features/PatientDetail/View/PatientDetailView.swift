@@ -45,10 +45,14 @@ struct PatientDetailView: View {
             VStack(spacing: 12) {
                 Button(action: {
                     Task {
-
+                        if(viewModel.isPatientReportExist) {
+                            print("View Report")
+                        } else {
+                            await viewModel.getPatientReports()
+                        }
                     }
                 }) {
-                    Text("Download Report")
+                    Text(viewModel.isPatientReportExist ? "View Report" : "Download Report")
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)

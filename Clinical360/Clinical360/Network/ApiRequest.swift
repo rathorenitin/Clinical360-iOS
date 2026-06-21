@@ -26,6 +26,7 @@ protocol ApiRequestProtocol {
     var parameters: Parameters { get }
     var method: HTTPMethodType { get }
     var headers: HTTPHeaders? { get }
+    var httpBody: Data? { get }
     var keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy { get }
 }
 
@@ -40,6 +41,10 @@ extension ApiRequestProtocol {
     }
     
     var headers: HTTPHeaders? {
+        nil
+    }
+    
+    var httpBody: Data? {
         nil
     }
     
@@ -59,15 +64,19 @@ extension ApiRequestProtocol {
         guard var urlComponents = URLComponents(string: self.url) else {
             throw APIError.noBaseUrl
         }
-        
-        urlComponents.queryItems = self.parameters.compactMap { URLQueryItem(name: $0.key, value: "\($0.value)") }
-        
+        if !self.parameters.isEmpty {
+            urlComponents.queryItems = self.parameters.compactMap { URLQueryItem(name: $0.key, value: "\($0.value)") }
+        }
         guard let url = urlComponents.url else {
             throw APIError.invalidRequest
         }
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = self.method.rawValue
+        urlRequest.httpBody = self.httpBody
+        self.headers?.forEach { (key,value) in
+            urlRequest.setValue("\(value)", forHTTPHeaderField: key)
+        }
         return urlRequest
     }
     
@@ -76,7 +85,9 @@ extension ApiRequestProtocol {
             return .failure(APIError.noBaseUrl)
         }
         
-        urlComponents.queryItems = self.parameters.compactMap { URLQueryItem(name: $0.key, value: "\($0.value)") }
+        if !self.parameters.isEmpty {
+            urlComponents.queryItems = self.parameters.compactMap { URLQueryItem(name: $0.key, value: "\($0.value)") }
+        }
         
         guard let url = urlComponents.url else {
             return .failure(APIError.invalidRequest)
@@ -84,6 +95,10 @@ extension ApiRequestProtocol {
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = self.method.rawValue
+        urlRequest.httpBody = self.httpBody
+        self.headers?.forEach { (key,value) in
+            urlRequest.setValue("\(value)", forHTTPHeaderField: key)
+        }
         return .success(urlRequest)
     }
 }
