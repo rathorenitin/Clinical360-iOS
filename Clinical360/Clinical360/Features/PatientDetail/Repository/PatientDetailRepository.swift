@@ -10,7 +10,6 @@ import Foundation
 protocol PatientDetailRepositoryProtocol {
     
     func getPatientDetail(patientId: String) async throws -> PatientDetail
-    func getPatientReports(for patientId: Int) async throws -> [Report]
 }
 
 // MARK: - PatientRepository
@@ -29,16 +28,4 @@ final class PatientDetailRepository: PatientDetailRepositoryProtocol {
         let patientUrlRequest = PatientDetailRequest(parameters: ["id": patientId])
         return try await self.apiClient.executeAsync(request: patientUrlRequest)
     }
-    
-    func getPatientReports(for patientId: Int) async throws -> [Report] {
-        let patientReportRequest = PatientReportRequest(patientId: patientId)
-        let patientReports: [PatientReport]? = try await self.apiClient.executeAsync(request: patientReportRequest)
-        guard patientReports != nil && patientReports?.first?.reports.isEmpty == false,
-              let reports = patientReports?.first?.reports else {
-            return []
-        }
-        
-        return reports
-    }
-    
 }

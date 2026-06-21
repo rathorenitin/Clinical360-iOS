@@ -10,6 +10,7 @@ import SwiftUI
 struct PatientDetailView: View {
     
     @StateObject var viewModel: PatientDetailViewModel
+    @State private var showPreview: Bool = false
     
     var body: some View {
         VStack {
@@ -42,24 +43,20 @@ struct PatientDetailView: View {
     
     private func reportView() -> some View {
         VStack {
-            VStack(spacing: 12) {
-                Button(action: {
-                    Task {
-                        if(viewModel.isPatientReportExist) {
-                            print("View Report")
-                        } else {
-                            await viewModel.getPatientReports()
-                        }
-                    }
-                }) {
-                    Text(viewModel.isPatientReportExist ? "View Report" : "Download Report")
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(12)
-                        .background(Color.blue)
-                        .cornerRadius(8)
-                }
+            NavigationLink(destination: {
+                let apiClient = ApiClient()
+                let downloadManger = DownloadManger()
+                let repo = PatientReportsRepository(apiClient: apiClient, downloadManger: downloadManger)
+                let vm = PatientReportsViewModel(patient: viewModel.patient, repository: repo)
+                PatientReportsView(viewModel: vm)
+            }) {
+                Text("View Reports")
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(12)
+                    .background(Color.blue)
+                    .cornerRadius(8)
             }
             .padding()
             .background(Color(.systemBackground))
