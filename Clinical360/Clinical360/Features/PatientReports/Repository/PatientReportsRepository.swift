@@ -16,10 +16,10 @@ protocol PatientReportsRepositoryProtocol {
 
 final class PatientReportsRepository: PatientReportsRepositoryProtocol {
     private let apiClient: ApiClientProtocol
-    private let downloadManger: DownloadManger
+    private let downloadManger: DownloadMangerProtocol
 
     // MARK: - initialization
-    init(apiClient: ApiClientProtocol, downloadManger: DownloadManger) {
+    init(apiClient: ApiClientProtocol, downloadManger: DownloadMangerProtocol) {
         self.apiClient = apiClient
         self.downloadManger = downloadManger
     }

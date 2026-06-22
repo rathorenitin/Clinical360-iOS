@@ -10,7 +10,7 @@ import SwiftUI
 struct PatientListView: View {
     
     @StateObject var viewModel: PatientListViewModel
-    
+    let dependencies: AppDependencies
     
     var body: some View {
         NavigationStack {
@@ -23,13 +23,9 @@ struct PatientListView: View {
                         }
                     
                 case let .loaded(patientList):
-                    let apiClient = ApiClient()
-                    let repository = PatientDetailRepository(apiClient: apiClient)
-                    
                     List(patientList) { patient in
                         NavigationLink(
-                            destination: PatientDetailView(viewModel: PatientDetailViewModel(patient: patient,
-                                                                                             repository: repository))
+                            destination: PatientDetailScene.makeView(patient: patient, dependencies: dependencies)
                         ) {
                             PatientListCell(patient: patient)
                         }

@@ -10,6 +10,7 @@ import SwiftUI
 struct PatientDetailView: View {
     
     @StateObject var viewModel: PatientDetailViewModel
+    let dependencies: AppDependencies
     @State private var showPreview: Bool = false
     
     var body: some View {
@@ -22,7 +23,7 @@ struct PatientDetailView: View {
                     }
                 
             case let .loaded(patientDetail):
-
+                
                 PatientDetailsView(patient: patientDetail)
                 
                 reportView()
@@ -43,21 +44,13 @@ struct PatientDetailView: View {
     
     private func reportView() -> some View {
         VStack {
-            NavigationLink(destination: {
-                let apiClient = ApiClient()
-                let downloadManger = DownloadManger()
-                let repo = PatientReportsRepository(apiClient: apiClient, downloadManger: downloadManger)
-                let vm = PatientReportsViewModel(patient: viewModel.patient, repository: repo)
-                PatientReportsView(viewModel: vm)
-            }) {
+            NavigationLink(destination: PatientReportsScene.makeView(for: viewModel.patient, dependencies: dependencies)) {
                 Text("View Reports")
                     .fontWeight(.semibold)
-                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(12)
-                    .background(Color.blue)
-                    .cornerRadius(8)
             }
+            .buttonStyle(.borderedProminent)
             .padding()
             .background(Color(.systemBackground))
         }

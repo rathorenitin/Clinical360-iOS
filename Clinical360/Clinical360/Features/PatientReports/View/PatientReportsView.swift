@@ -10,7 +10,7 @@ import SwiftUI
 struct PatientReportsView: View {
     @StateObject var viewModel: PatientReportsViewModel
     @State private var showPreview: Bool = false
-
+    
     var body: some View {
         VStack {
             switch viewModel.state {
@@ -19,7 +19,7 @@ struct PatientReportsView: View {
                     .task {
                         await viewModel.getPatientReports()
                     }
-
+                
             case let .loaded(reports):
                 List(reports, id: \.reportId) { report in
                     PatientReportsCell(
@@ -42,10 +42,10 @@ struct PatientReportsView: View {
                     )
                 }
                 .listStyle(.insetGrouped)
-
+                
             case let .empty(message):
                 EmptyStateView(message: message)
-
+                
             case let .error(message):
                 ErrorView(message: message) {
                     viewModel.state = .loading
