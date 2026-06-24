@@ -16,23 +16,23 @@ protocol PatientReportsViewModelProtocol: ObservableObject {
 }
 
 final class PatientReportsViewModel: ObservableObject, PatientReportsViewModelProtocol {
-    private let repository: PatientReportsRepositoryProtocol
+    private let useCase: PatientReportsUseCaseProtocol
     @Published var state: ViewState<[Report]> = .loading
     @Published var reports: [Report] = []
     @Published var currentReportURL: URL?
     @Published var downloadingReportId: String?
     let patient: PatientRecord
-    
-    init(patient: PatientRecord, repository: PatientReportsRepositoryProtocol) {
+
+    init(patient: PatientRecord, useCase: PatientReportsUseCaseProtocol) {
         self.patient = patient
-        self.repository = repository
+        self.useCase = useCase
     }
-    
+
     func getPatientReports() async {
         self.state = .loading
-        
+
         do {
-            let respone = try await self.repository.getPatientReports(for: patient.id)
+            let respone = try await self.useCase.getPatientReports(for: patient.id)
             self.reports = respone
             self.state = respone.isEmpty ? .empty("No reports found") : .loaded(respone)
         } catch {
@@ -40,16 +40,16 @@ final class PatientReportsViewModel: ObservableObject, PatientReportsViewModelPr
             self.state = .error(error.localizedDescription)
         }
     }
-    
+
     func downloadReport(_ report: Report) async {
         self.downloadingReportId = report.reportId
-        
+
         defer {
             self.downloadingReportId = nil
         }
-        
+
         do {
-            let saved = try await self.repository.downloadPatientReport(reports: [report], patientId: patient.id)
+            let saved = try await self.useCase.downloadPatientReport(reports: [report], patientId: patient.id)
             if let first = saved.first {
                 self.currentReportURL = first
             }
@@ -57,16 +57,16 @@ final class PatientReportsViewModel: ObservableObject, PatientReportsViewModelPr
             print(error)
         }
     }
-    
+
     func isReportSaved(_ report: Report) -> Bool {
-        return self.repository.isReportSaved(report: report, patientId: patient.id)
+        return self.useCase.isReportSaved(report: report, patientId: patient.id)
     }
-    
+
     func isDownloading(_ report: Report) -> Bool {
         return self.downloadingReportId == report.reportId
     }
-    
+
     func localFileURL(for report: Report) -> URL {
-        return self.repository.localFileURL(for: report, patientId: patient.id)
+        return self.useCase.localFileURL(for: report, patientId: patient.id)
     }
 }

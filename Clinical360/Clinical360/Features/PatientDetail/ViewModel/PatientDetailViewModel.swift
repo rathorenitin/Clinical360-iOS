@@ -14,18 +14,18 @@ protocol PatientDetailViewModelProtocol {
 }
 
 final class PatientDetailViewModel: ObservableObject, PatientDetailViewModelProtocol {
-    private let repository: PatientDetailRepositoryProtocol
+    private let useCase: PatientDetailUseCaseProtocol
     @Published var state: ViewState<PatientDetail> = .loading
     let patient: PatientRecord
-    
-    init(patient: PatientRecord, repository: PatientDetailRepositoryProtocol) {
+
+    init(patient: PatientRecord, useCase: PatientDetailUseCaseProtocol) {
         self.patient = patient
-        self.repository = repository
+        self.useCase = useCase
     }
-    
+
     func getPatientDetail() async {
         do {
-            let respone = try await self.repository.getPatientDetail(patientId: "\(patient.id)")
+            let respone = try await self.useCase.getPatientDetail(patientId: "\(patient.id)")
             self.state = .loaded(respone)
             print(respone)
         } catch {
@@ -33,6 +33,5 @@ final class PatientDetailViewModel: ObservableObject, PatientDetailViewModelProt
             state = .error(error.localizedDescription)
         }
     }
-    
-    
+
 }

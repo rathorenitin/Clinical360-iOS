@@ -13,17 +13,16 @@ protocol PatientListViewModelProtocol {
 }
 
 final class PatientListViewModel: ObservableObject, PatientListViewModelProtocol {
-    private let repository: PatientListRepositoryProtocol
+    private let useCase: PatientListUseCaseProtocol
     @Published var state: ViewState<[PatientRecord]> = .loading
 
-    
-    init(repository: PatientListRepositoryProtocol) {
-        self.repository = repository
+    init(useCase: PatientListUseCaseProtocol) {
+        self.useCase = useCase
     }
-    
+
     func getPatients() async {
         do {
-            let respone = try await self.repository.getPatients()
+            let respone = try await self.useCase.getPatients()
             state = respone.records.isEmpty ? .empty("No Patients found") : .loaded(respone.records)
             print(respone.records)
         } catch {

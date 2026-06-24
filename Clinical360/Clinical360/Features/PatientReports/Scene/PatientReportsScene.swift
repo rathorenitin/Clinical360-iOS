@@ -10,8 +10,9 @@ import SwiftUI
 struct PatientReportsScene {
     static func makeView(for patient: PatientRecord, dependencies: AppDependencies) -> some View {
         let repository = PatientReportsRepository(apiClient: dependencies.apiClient,
-                                                  downloadManger: dependencies.downloadManager)
-        let viewModel = PatientReportsViewModel(patient: patient, repository: repository)
+                              downloadManger: dependencies.downloadManager)
+        let useCase = PatientReportsUseCase(repository: repository)
+        let viewModel = PatientReportsViewModel(patient: patient, useCase: useCase)
         return PatientReportsView(viewModel: viewModel)
     }
 }
