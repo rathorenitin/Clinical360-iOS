@@ -16,6 +16,7 @@ struct PatientListCell: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(patient.fullName)
                     .fontWeight(.semibold)
+                    .foregroundColor(.primary)
                 
                 Text("\(patient.wardNumber) · \(patient.bed)")
                     .font(.subheadline)

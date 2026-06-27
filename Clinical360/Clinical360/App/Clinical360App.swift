@@ -9,11 +9,10 @@ import SwiftUI
 
 @main
 struct Clinical360App: App {
-    private let dependencies = AppDependencies()
-
     var body: some Scene {
         WindowGroup {
-            PatientListScene.makeView(dependencies: dependencies)
+            let coordinator = AppCoordinator()
+            coordinator.makeRootView()
         }
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Patient Record
 
-struct PatientRecord: Decodable, Identifiable {
+struct PatientRecord: Decodable, Identifiable, Hashable {
     let id: Int
     let fullName: String
     let wardNumber: String

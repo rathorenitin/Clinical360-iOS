@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct PatientListScene {
-    static func makeView(dependencies: AppDependencies) -> some View {
+    static func makeView(dependencies: AppDependencies, coordinator: AppCoordinator) -> some View {
         let repository = PatientListRepository(apiClient: dependencies.apiClient)
         let useCase = PatientListUseCase(repository: repository)
         let viewModel = PatientListViewModel(useCase: useCase)
-        return PatientListView(viewModel: viewModel, dependencies: dependencies)
+        return PatientListView(viewModel: viewModel, dependencies: dependencies, coordinator: coordinator)
     }
 }

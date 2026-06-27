@@ -11,6 +11,7 @@ struct PatientDetailView: View {
     
     @StateObject var viewModel: PatientDetailViewModel
     let dependencies: AppDependencies
+    @ObservedObject var coordinator: AppCoordinator
     @State private var showPreview: Bool = false
     
     var body: some View {
@@ -44,7 +45,9 @@ struct PatientDetailView: View {
     
     private func reportView() -> some View {
         VStack {
-            NavigationLink(destination: PatientReportsScene.makeView(for: viewModel.patient, dependencies: dependencies)) {
+            Button(action: {
+                coordinator.push(.patientReports(patient: viewModel.patient))
+            }) {
                 Text("View Reports")
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)

@@ -11,9 +11,10 @@ struct PatientListView: View {
     
     @StateObject var viewModel: PatientListViewModel
     let dependencies: AppDependencies
+    @ObservedObject var coordinator: AppCoordinator
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $coordinator.path) {
             VStack {
                 switch viewModel.state {
                 case .loading:
@@ -24,9 +25,9 @@ struct PatientListView: View {
                     
                 case let .loaded(patientList):
                     List(patientList) { patient in
-                        NavigationLink(
-                            destination: PatientDetailScene.makeView(patient: patient, dependencies: dependencies)
-                        ) {
+                        Button(action: {
+                            coordinator.push(.patientDetail(patient: patient))
+                        }) {
                             PatientListCell(patient: patient)
                         }
                     }
@@ -45,6 +46,9 @@ struct PatientListView: View {
             }
             .frame(alignment: .topLeading)
             .navigationTitle("Patients")
+            .navigationDestination(for: AppRoute.self) { route in
+                coordinator.makeDestination(for: route)
+            }
         }
         
     }
